@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIU Alumni Web Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .nav button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav button.active {
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        }
+
+        .user-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .user-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .user-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .user-actions button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .poll-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #28a745;
+        }
+
+        .poll-options {
+            margin: 15px 0;
+        }
+
+        .poll-option {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .poll-option:hover {
+            background: #e9ecef;
+        }
+
+        .poll-result {
+            margin-left: 10px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-online {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-admin {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .social-link {
+            padding: 8px 12px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: #764ba2;
+            transform: translateY(-1px);
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .skill-tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            border: 1px solid #dee2e6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .user-actions {
+                flex-direction: column;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 DIU Alumni Web Portal</h1>
+            <p>Connecting Daffodil International University Alumni Worldwide</p>
+            <div id="userStatus" class="status-indicator status-online hidden">Logged In</div>
+            <div class="nav">
+                <button onclick="showSection('home')" class="active" id="homeBtn">Home</button>
+                <button onclick="showSection('login')" id="loginBtn">Login</button>
+                <button onclick="showSection('register')" id="registerBtn">Register</button>
+                <button onclick="showSection('profile')" id="profileBtn" class="hidden">Profile</button>
+                <button onclick="showSection('polls')" id="pollsBtn" class="hidden">Polls</button>
+                <button onclick="showSection('alumni')" id="alumniBtn" class="hidden">Alumni Directory</button>
+                <button onclick="showSection('admin')" id="adminBtn" class="hidden">Admin Panel</button>
+                <button onclick="logout()" id="logoutBtn" class="hidden">Logout</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Home Section -->
+            <div id="homeSection">
+                <h2>Welcome to DIU Alumni Portal</h2>
+                <p>Connect with fellow Daffodil International University alumni, share experiences, and stay updated with the latest news and events.</p>
+                
+                <div class="stats-grid" style="margin-top: 30px;">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalAlumni">1,247</div>
+                        <div>Total Alumni</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="activeUsers">89</div>
+                        <div>Active This Month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalPosts">156</div>
+                        <div>Community Posts</div>
+                    </div>
+                </div>
+
+                <div class="grid" style="margin-top: 30px;">
+                    <div class="card">
+                        <h3>Recent Posts</h3>
+                        <div id="recentPosts">
+                            <div style="margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                <strong>Admin:</strong> Welcome to our new alumni portal! We're excited to connect our DIU family.
+                                <div style="font-size: 12px; color: #666; margin-top: 5px;">2 days ago</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Featured Alumni</h3>
+                        <div style="margin-top: 15px;">
+                            <p><strong>Sarah Ahmed</strong> - Software Engineer at Google</p>
+                            <p><strong>Mahmud Rahman</strong> - Entrepreneur & Startup Founder</p>
+                            <p><strong>Fatima Khan</strong> - Data Scientist at Microsoft</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Section -->
+            <div id="loginSection" class="hidden">
+                <h2>Login to Your Account</h2>
+                <form onsubmit="login(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Email:</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password:</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                </form>
+                <p style="margin-top: 20px;">Don't have an account? <a href="#" onclick="showSection('register')">Register here</a></p>
+            </div>
+
+            <!-- Register Section -->
+            <div id="registerSection" class="hidden">
+                <h2>Register New Account</h2>
+                <form onsubmit="register(event)">
+                    <div class="form-group">
+                        <label for="regName">Full Name:</label>
+                        <input type="text" id="regName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email:</label>
+                        <input type="email" id="regEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Password:</label>
+                        <input type="password" id="regPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regGradYear">Graduation Year:</label>
+                        <input type="number" id="regGradYear" min="1990" max="2030" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regDepartment">Department:</label>
+                        <select id="regDepartment" required>
+                            <option value="">Select Department</option>
+                            <option value="CSE">Computer Science & Engineering</option>
+                            <option value="EEE">Electrical & Electronic Engineering</option>
+                            <option value="BBA">Business Administration</option>
+                            <option value="English">English</option>
+                            <option value="Civil">Civil Engineering</option>
+                            <option value="Architecture">Architecture</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPhone">Phone:</label>
+                        <input type="tel" id="regPhone">
+                    </div>
+                    <button type="submit" class="btn">Register</button>
+                </form>
+                <p style="margin-top: 20px;">Already have an account? <a href="#" onclick="showSection('login')">Login here</a></p>
+            </div>
+
+            <!-- Profile Section -->
+            <div id="profileSection" class="hidden">
+                <h2>My Profile</h2>
+                <div id="profileContent">
+                    <form onsubmit="updateProfile(event)">
+                        <div class="grid">
+                            <div>
+                                <div class="form-group">
+                                    <label for="profileName">Full Name:</label>
+                                    <input type="text" id="profileName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileEmail">Email:</label>
+                                    <input type="email" id="profileEmail" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profilePhone">Phone:</label>
+                                    <input type="tel" id="profilePhone">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileCompany">Current Company:</label>
+                                    <input type="text" id="profileCompany">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profilePosition">Position:</label>
+                                    <input type="text" id="profilePosition">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <label for="profileGradYear">Graduation Year:</label>
+                                    <input type="number" id="profileGradYear" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileDepartment">Department:</label>
+                                    <input type="text" id="profileDepartment" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileBio">Bio:</label>
+                                    <textarea id="profileBio" rows="4" placeholder="Tell us about yourself..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileLocation">Location:</label>
+                                    <input type="text" id="profileLocation">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn">Update Profile</button>
+                    </form>
+
+                    <hr style="margin: 30px 0;">
+
+                    <!-- Skills Section -->
+                    <h3>Skills</h3>
+                    <div class="form-group">
+                        <input type="text" id="newSkill" placeholder="Add a skill..." onkeypress="addSkillOnEnter(event)">
+                        <button type="button" class="btn" onclick="addSkill()" style="margin-top: 10px;">Add Skill</button>
+                    </div>
+                    <div class="skills-container" id="skillsContainer"></div>
+
+                    <hr style="margin: 30px 0;">
+
+                    <!-- Social Links Section -->
+                    <h3>Social Links</h3>
+                    <div class="form-group">
+                        <label for="linkedinUrl">LinkedIn:</label>
+                        <input type="url" id="linkedinUrl" placeholder="https://linkedin.com/in/yourprofile">
+                    </div>
+                    <div class="form-group">
+                        <label for="githubUrl">GitHub:</label>
+                        <input type="url" id="githubUrl" placeholder="https://github.com/yourusername">
+                    </div>
+                    <div class="form-group">
+                        <label for="facebookUrl">Facebook:</label>
+                        <input type="url" id="facebookUrl" placeholder="https://facebook.com/yourprofile">
+                    </div>
+                    <button type="button" class="btn" onclick="updateSocialLinks()">Update Social Links</button>
+
+                    <hr style="margin: 30px 0;">
+
+                    <!-- Account Management -->
+                    <h3>Account Management</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
+                        <button type="button" class="btn" onclick="showChangePassword()">Change Password</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Polls Section -->
+            <div id="pollsSection" class="hidden">
+                <h2>Community Polls</h2>
+                <div id="pollsContainer">
+                    <div class="poll-item">
+                        <h3>What's your preferred programming language?</h3>
+                        <div class="poll-options">
+                            <div class="poll-option" onclick="vote(1, 'JavaScript')">
+                                <input type="radio" name="poll1" value="JavaScript"> JavaScript
+                                <span class="poll-result">45%</span>
+                            </div>
+                            <div class="poll-option" onclick="vote(1, 'Python')">
+                                <input type="radio" name="poll1" value="Python"> Python
+                                <span class="poll-result">35%</span>
+                            </div>
+                            <div class="poll-option" onclick="vote(1, 'Java')">
+                                <input type="radio" name="poll1" value="Java"> Java
+                                <span class="poll-result">20%</span>
+                            </div>
+                        </div>
+                        <small>156 votes • Created by Admin</small>
+                    </div>
+
+                    <div class="poll-item">
+                        <h3>Best time for alumni meetup?</h3>
+                        <div class="poll-options">
+                            <div class="poll-option" onclick="vote(2, 'Weekend')">
+                                <input type="radio" name="poll2" value="Weekend"> Weekend
+                                <span class="poll-result">60%</span>
+                            </div>
+                            <div class="poll-option" onclick="vote(2, 'Weekday Evening')">
+                                <input type="radio" name="poll2" value="Weekday Evening"> Weekday Evening
+                                <span class="poll-result">40%</span>
+                            </div>
+                        </div>
+                        <small>89 votes • Created by Admin</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alumni Directory Section -->
+            <div id="alumniSection" class="hidden">
+                <h2>Alumni Directory</h2>
+                <div class="form-group">
+                    <input type="text" id="searchAlumni" placeholder="Search alumni by name, department, or company..." onkeyup="searchAlumni()">
+                </div>
+                <div id="alumniList">
+                    <!-- Alumni will be populated here -->
+                </div>
+            </div>
+
+            <!-- Admin Panel Section -->
+            <div id="adminSection" class="hidden">
+                <h2>Admin Panel</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="adminTotalAlumni">1,247</div>
+                        <div>Total Alumni</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="adminNewThisMonth">23</div>
+                        <div>New This Month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="adminActiveUsers">89</div>
+                        <div>Active Users</div>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Create Post</h3>
+                        <form onsubmit="createPost(event)">
+                            <div class="form-group">
+                                <label for="postTitle">Post Title:</label>
+                                <input type="text" id="postTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="postContent">Content:</label>
+                                <textarea id="postContent" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn">Create Post</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h3>Send Email</h3>
+                        <form onsubmit="sendEmail(event)">
+                            <div class="form-group">
+                                <label for="emailRecipient">Recipient:</label>
+                                <select id="emailRecipient" required>
+                                    <option value="">Select recipient</option>
+                                    <option value="all">All Alumni</option>
+                                    <option value="recent">Recent Graduates</option>
+                                    <option value="specific">Specific Alumni</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="emailSubject">Subject:</label>
+                                <input type="text" id="emailSubject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="emailContent">Message:</label>
+                                <textarea id="emailContent" rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn">Send Email</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <h3>Alumni Management</h3>
+                    <div class="form-group">
+                        <input type="text" id="adminSearchAlumni" placeholder="Search alumni..." onkeyup="adminSearchAlumni()">
+                    </div>
+                    <div id="adminAlumniList">
+                        <!-- Admin alumni list will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Change Password Modal -->
+            <div id="changePasswordModal" class="hidden">
+                <h3>Change Password</h3>
+                <form onsubmit="changePassword(event)">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password:</label>
+                        <input type="password" id="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password:</label>
+                        <input type="password" id="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password:</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <button type="submit" class="btn">Change Password</button>
+                        <button type="button" class="btn" onclick="hideChangePassword()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // In-memory data storage (simulating database)
+        let users = [
+            {
+                id: 1,
+                name: "Admin User",
+                email: "admin@diu.edu.bd",
+                password: "admin123",
+                role: "admin",
+                gradYear: 2020,
+                department: "CSE",
+                phone: "+8801700000000",
+                company: "DIU",
+                position: "System Administrator",
+                bio: "System administrator for DIU Alumni Portal",
+                location: "Dhaka, Bangladesh",
+                skills: ["System Administration", "Database Management"],
+                socialLinks: {
+                    linkedin: "",
+                    github: "",
+                    facebook: ""
+                }
+            },
+            {
+                id: 2,
+                name: "Sarah Ahmed",
+                email: "sarah@example.com",
+                password: "user123",
+                role: "user",
+                gradYear: 2019,
+                department: "CSE",
+                phone: "+8801700000001",
+                company: "Google",
+                position: "Software Engineer",
+                bio: "Passionate software engineer working on cutting-edge technologies",
+                location: "California, USA",
+                skills: ["JavaScript", "React", "Node.js", "Python"],
+                socialLinks: {
+                    linkedin: "https://linkedin.com/in/sarah-ahmed",
+                    github: "https://github.com/sarah-ahmed",
+                    facebook: ""
+                }
+            },
+            {
+                id: 3,
+                name: "Mahmud Rahman",
+                email: "mahmud@example.com",
+                password: "user123",
+                role: "user",
+                gradYear: 2018,
+                department: "BBA",
+                phone: "+8801700000002",
+                company: "StartupX",
+                position: "CEO & Founder",
+                bio: "Entrepreneur building innovative solutions for emerging markets",
+                location: "Dhaka, Bangladesh",
+                skills: ["Leadership", "Business Strategy", "Marketing"],
+                socialLinks: {
+                    linkedin: "https://linkedin.com/in/mahmud-rahman",
+                    github: "",
+                    facebook: "https://facebook.com/mahmud.rahman"
+                }
+            }
+        ];
+
+        let posts = [
+            {
+                id: 1,
+                title: "Welcome to DIU Alumni Portal",
+                content: "We're excited to launch this new platform to connect our amazing DIU alumni community!",
+                author: "Admin",
+                date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
+            }
+        ];
+
+        let polls = [
+            {
+                id: 1,
+                question: "What's your preferred programming language?",
+                options: {
+                    "JavaScript": 45,
+                    "Python": 35,
+                    "Java": 20
+                },
+                totalVotes: 156
+            },
+            {
+                id: 2,
+                question: "Best time for alumni meetup?",
+                options: {
+                    "Weekend": 60,
+                    "Weekday Evening": 40
+                },
+                totalVotes: 89
+            }
+        ];
+
+        let currentUser = null;
+
+        // Initialize the application
+        function init() {
+            showSection('home');
+            updateStats();
+        }
+
+        // Show/Hide sections
+        function showSection(section) {
+            const sections = ['homeSection', 'loginSection', 'registerSection', 'profileSection', 'pollsSection', 'alumniSection', 'adminSection'];
+            sections.forEach(s => {
+                document.getElementById(s).classList.add('hidden');
+            });
+            document.getElementById(section + 'Section').classList.remove('hidden');
+
+            // Update nav buttons
+            document.querySelectorAll('.nav button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(section + 'Btn').classList.add('active');
+
+            // Load section-specific content
+            if (section === 'alumni') {
+                loadAlumniDirectory();
+            } else if (section === 'admin' && currentUser && currentUser.role === 'admin') {
+                loadAdminPanel();
+            } else if (section === 'profile' && currentUser) {
+                loadProfile();
+            }
+        }
+
+        // Authentication functions
+        function login(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const user = users.find(u => u.email === email && u.password === password);
+            if (user) {
+                currentUser = user;
+                showMessage('Login successful!', 'success');
+                updateUIForLoggedInUser();
+                showSection('home');
+            } else {
+                showMessage('Invalid email or password!', 'error');
+            }
+        }
+
+        function register(event) {
+            event.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const gradYear = parseInt(document.getElementById('regGradYear').value);
+            const department = document.getElementById('regDepartment').value;
+            const phone = document.getElementById('regPhone').value;
+
+            // Check if email already exists
+            if (users.find(u => u.email === email)) {
+                showMessage('Email already registered!', 'error');
+                return;
+            }
+
+            // Create new user
+            const newUser = {
+                id: users.length + 1,
+                name,
+                email,
+                password,
+                role: 'user',
+                gradYear,
+                department,
+                phone,
+                company: '',
+                position: '',
+                bio: '',
+                location: '',
+                skills: [],
+                socialLinks: {
+                    linkedin: '',
+                    github: '',
+                    facebook: ''
+                }
+            };
+
+            users.push(newUser);
+            showMessage('Registration successful! Please login.', 'success');
+            showSection('login');
+            updateStats();
+        }
+
+        function logout() {
+            currentUser = null;
+            updateUIForLoggedOutUser();
+            showSection('home');
+            showMessage('Logged out successfully!', 'success');
+        }
+
+        function updateUIForLoggedInUser() {
+            document.getElementById('userStatus').classList.remove('hidden');
+            document.getElementById('loginBtn').classList.add('hidden');
+            document.getElementById('registerBtn').classList.add('hidden');
+            document.getElementById('profileBtn').classList.remove('hidden');
+            document.getElementById('pollsBtn').classList.remove('hidden');
+            document.getElementById('alumniBtn').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+
+            if (currentUser.role === 'admin') {
+                document.getElementById('adminBtn').classList.remove('hidden');
+                document.getElementById('userStatus').textContent = 'Admin';
+                document.getElementById('userStatus').className = 'status-indicator status-admin';
+            } else {
+                document.getElementById('userStatus').textContent = 'Logged In';
+                document.getElementById('userStatus').className = 'status-indicator status-online';
+            }
+        }
+
+        function updateUIForLoggedOutUser() {
+            document.getElementById('userStatus').classList.add('hidden');
+            document.getElementById('loginBtn').classList.remove('hidden');
+            document.getElementById('registerBtn').classList.remove('hidden');
+            document.getElementById('profileBtn').classList.add('hidden');
+            document.getElementById('pollsBtn').classList.add('hidden');
+            document.getElementById('alumniBtn').classList.add('hidden');
+            document.getElementById('adminBtn').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+        }
+
+        // Profile functions
+        function loadProfile() {
+            if (!currentUser) return;
+
+            document.getElementById('profileName').value = currentUser.name;
+            document.getElementById('profileEmail').value = currentUser.email;
+            document.getElementById('profilePhone').value = currentUser.phone || '';
+            document.getElementById('profileCompany').value = currentUser.company || '';
+            document.getElementById('profilePosition').value = currentUser.position || '';
+            document.getElementById('profileGradYear').value = currentUser.gradYear;
+            document.getElementById('profileDepartment').value = currentUser.department;
+            document.getElementById('profileBio').value = currentUser.bio || '';
+            document.getElementById('profileLocation').value = currentUser.location || '';
+            document.getElementById('linkedinUrl').value = currentUser.socialLinks.linkedin || '';
+            document.getElementById('githubUrl').value = currentUser.socialLinks.github || '';
+            document.getElementById('facebookUrl').value = currentUser.socialLinks.facebook || '';
+
+            loadSkills();
+        }
+
+        function updateProfile(event) {
+            event.preventDefault();
+            if (!currentUser) return;
+
+            currentUser.name = document.getElementById('profileName').value;
+            currentUser.phone = document.getElementById('profilePhone').value;
+            currentUser.company = document.getElementById('profileCompany').value;
+            currentUser.position = document.getElementById('profilePosition').value;
+            currentUser.bio = document.getElementById('profileBio').value;
+            currentUser.location = document.getElementById('profileLocation').value;
+
+            showMessage('Profile updated successfully!', 'success');
+        }
+
+        function loadSkills() {
+            const container = document.getElementById('skillsContainer');
+            container.innerHTML = '';
+            
+            if (currentUser && currentUser.skills) {
+                currentUser.skills.forEach((skill, index) => {
+                    const skillTag = document.createElement('span');
+                    skillTag.className = 'skill-tag';
+                    skillTag.innerHTML = `${skill} <span style="cursor: pointer; margin-left: 8px;" onclick="removeSkill(${index})">×</span>`;
+                    container.appendChild(skillTag);
+                });
+            }
+        }
+
+        function addSkill() {
+            const skillInput = document.getElementById('newSkill');
+            const skill = skillInput.value.trim();
+            
+            if (skill && currentUser) {
+                if (!currentUser.skills.includes(skill)) {
+                    currentUser.skills.push(skill);
+                    skillInput.value = '';
+                    loadSkills();
+                    showMessage('Skill added successfully!', 'success');
+                } else {
+                    showMessage('Skill already exists!', 'error');
+                }
+            }
+        }
+
+        function addSkillOnEnter(event) {
+            if (event.key === 'Enter') {
+                addSkill();
+            }
+        }
+
+        function removeSkill(index) {
+            if (currentUser && currentUser.skills) {
+                currentUser.skills.splice(index, 1);
+                loadSkills();
+                showMessage('Skill removed!', 'success');
+            }
+        }
+
+        function updateSocialLinks() {
+            if (!currentUser) return;
+
+            currentUser.socialLinks.linkedin = document.getElementById('linkedinUrl').value;
+            currentUser.socialLinks.github = document.getElementById('githubUrl').value;
+            currentUser.socialLinks.facebook = document.getElementById('facebookUrl').value;
+
+            showMessage('Social links updated successfully!', 'success');
+        }
+
+        function showChangePassword() {
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+            document.getElementById('profileContent').style.opacity = '0.3';
+        }
+
+        function hideChangePassword() {
+            document.getElementById('changePasswordModal').classList.add('hidden');
+            document.getElementById('profileContent').style.opacity = '1';
+        }
+
+        function changePassword(event) {
+            event.preventDefault();
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+
+            if (current !== currentUser.password) {
+                showMessage('Current password is incorrect!', 'error');
+                return;
+            }
+
+            if (newPass !== confirm) {
+                showMessage('New passwords do not match!', 'error');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                showMessage('Password must be at least 6 characters!', 'error');
+                return;
+            }
+
+            currentUser.password = newPass;
+            showMessage('Password changed successfully!', 'success');
+            hideChangePassword();
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        function deleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                if (userIndex > -1) {
+                    users.splice(userIndex, 1);
+                    showMessage('Account deleted successfully!', 'success');
+                    logout();
+                    updateStats();
+                }
+            }
+        }
+
+        // Alumni Directory functions
+        function loadAlumniDirectory() {
+            const container = document.getElementById('alumniList');
+            container.innerHTML = '';
+
+            const alumniUsers = users.filter(u => u.role === 'user');
+            alumniUsers.forEach(user => {
+                const userCard = createUserCard(user, false);
+                container.appendChild(userCard);
+            });
+        }
+
+        function searchAlumni() {
+            const query = document.getElementById('searchAlumni').value.toLowerCase();
+            const container = document.getElementById('alumniList');
+            container.innerHTML = '';
+
+            const filtered = users.filter(u => 
+                u.role === 'user' && (
+                    u.name.toLowerCase().includes(query) ||
+                    u.department.toLowerCase().includes(query) ||
+                    (u.company && u.company.toLowerCase().includes(query))
+                )
+            );
+
+            filtered.forEach(user => {
+                const userCard = createUserCard(user, false);
+                container.appendChild(userCard);
+            });
+        }
+
+        // Admin functions
+        function loadAdminPanel() {
+            if (!currentUser || currentUser.role !== 'admin') return;
+
+            document.getElementById('adminTotalAlumni').textContent = users.filter(u => u.role === 'user').length;
+            document.getElementById('adminNewThisMonth').textContent = Math.floor(Math.random() * 30) + 10;
+            document.getElementById('adminActiveUsers').textContent = Math.floor(Math.random() * 100) + 50;
+
+            adminSearchAlumni();
+        }
+
+        function adminSearchAlumni() {
+            const query = document.getElementById('adminSearchAlumni').value.toLowerCase();
+            const container = document.getElementById('adminAlumniList');
+            container.innerHTML = '';
+
+            const filtered = users.filter(u => 
+                u.role === 'user' && (
+                    u.name.toLowerCase().includes(query) ||
+                    u.email.toLowerCase().includes(query) ||
+                    u.department.toLowerCase().includes(query)
+                )
+            );
+
+            filtered.forEach(user => {
+                const userCard = createUserCard(user, true);
+                container.appendChild(userCard);
+            });
+        }
+
+        function createUserCard(user, isAdmin = false) {
+            const card = document.createElement('div');
+            card.className = 'user-card';
+            
+            const socialLinksHtml = Object.entries(user.socialLinks)
+                .filter(([platform, url]) => url)
+                .map(([platform, url]) => `<a href="${url}" class="social-link" target="_blank">${platform}</a>`)
+                .join('');
+
+            const skillsHtml = user.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('');
+
+            card.innerHTML = `
+                <h3>${user.name}</h3>
+                <div class="user-info">
+                    <div><strong>Email:</strong> ${user.email}</div>
+                    <div><strong>Department:</strong> ${user.department}</div>
+                    <div><strong>Graduation:</strong> ${user.gradYear}</div>
+                    <div><strong>Company:</strong> ${user.company || 'Not specified'}</div>
+                    <div><strong>Position:</strong> ${user.position || 'Not specified'}</div>
+                    <div><strong>Location:</strong> ${user.location || 'Not specified'}</div>
+                </div>
+                ${user.bio ? `<p><strong>Bio:</strong> ${user.bio}</p>` : ''}
+                ${skillsHtml ? `<div class="skills-container">${skillsHtml}</div>` : ''}
+                ${socialLinksHtml ? `<div class="social-links">${socialLinksHtml}</div>` : ''}
+                ${isAdmin ? `
+                    <div class="user-actions">
+                        <button onclick="viewUserDetails(${user.id})" style="background: #667eea; color: white;">View Details</button>
+                        <button onclick="adminDeleteUser(${user.id})" style="background: #ff6b6b; color: white;">Delete Account</button>
+                        <button onclick="sendEmailToUser(${user.id})" style="background: #28a745; color: white;">Send Email</button>
+                    </div>
+                ` : ''}
+            `;
+            
+            return card;
+        }
+
+        function createPost(event) {
+            event.preventDefault();
+            if (!currentUser || currentUser.role !== 'admin') return;
+
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+
+            const post = {
+                id: posts.length + 1,
+                title,
+                content,
+                author: currentUser.name,
+                date: new Date()
+            };
+
+            posts.unshift(post);
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+            showMessage('Post created successfully!', 'success');
+            updateRecentPosts();
+        }
+
+        function sendEmail(event) {
+            event.preventDefault();
+            if (!currentUser || currentUser.role !== 'admin') return;
+
+            const recipient = document.getElementById('emailRecipient').value;
+            const subject = document.getElementById('emailSubject').value;
+            const content = document.getElementById('emailContent').value;
+
+            // Simulate sending email
+            let recipientCount = 0;
+            if (recipient === 'all') {
+                recipientCount = users.filter(u => u.role === 'user').length;
+            } else if (recipient === 'recent') {
+                recipientCount = users.filter(u => u.role === 'user' && u.gradYear >= 2020).length;
+            } else {
+                recipientCount = 1;
+            }
+
+            showMessage(`Email sent to ${recipientCount} recipient(s)!`, 'success');
+            document.getElementById('emailRecipient').value = '';
+            document.getElementById('emailSubject').value = '';
+            document.getElementById('emailContent').value = '';
+        }
+
+        function sendEmailToUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                const subject = prompt('Email Subject:');
+                const message = prompt('Email Message:');
+                if (subject && message) {
+                    showMessage(`Email sent to ${user.name}!`, 'success');
+                }
+            }
+        }
+
+        function viewUserDetails(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                alert(`
+User Details:
+Name: ${user.name}
+Email: ${user.email}
+Department: ${user.department}
+Graduation Year: ${user.gradYear}
+Phone: ${user.phone || 'Not provided'}
+Company: ${user.company || 'Not specified'}
+Position: ${user.position || 'Not specified'}
+Location: ${user.location || 'Not specified'}
+Bio: ${user.bio || 'Not provided'}
+Skills: ${user.skills.join(', ') || 'None added'}
+                `);
+            }
+        }
+
+        function adminDeleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user account?')) {
+                const userIndex = users.findIndex(u => u.id === userId);
+                if (userIndex > -1) {
+                    users.splice(userIndex, 1);
+                    showMessage('User account deleted!', 'success');
+                    adminSearchAlumni();
+                    updateStats();
+                }
+            }
+        }
+
+        // Poll functions
+        function vote(pollId, option) {
+            if (!currentUser) {
+                showMessage('Please login to vote!', 'error');
+                return;
+            }
+
+            const poll = polls.find(p => p.id === pollId);
+            if (poll && poll.options[option] !== undefined) {
+                poll.options[option]++;
+                poll.totalVotes++;
+                showMessage('Vote recorded!', 'success');
+                loadPolls();
+            }
+        }
+
+        function loadPolls() {
+            const container = document.getElementById('pollsContainer');
+            container.innerHTML = '';
+
+            polls.forEach(poll => {
+                const pollDiv = document.createElement('div');
+                pollDiv.className = 'poll-item';
+                
+                let optionsHtml = '';
+                Object.entries(poll.options).forEach(([option, votes]) => {
+                    const percentage = poll.totalVotes > 0 ? Math.round((votes / poll.totalVotes) * 100) : 0;
+                    optionsHtml += `
+                        <div class="poll-option" onclick="vote(${poll.id}, '${option}')">
+                            <input type="radio" name="poll${poll.id}" value="${option}"> ${option}
+                            <span class="poll-result">${percentage}%</span>
+                        </div>
+                    `;
+                });
+
+                pollDiv.innerHTML = `
+                    <h3>${poll.question}</h3>
+                    <div class="poll-options">${optionsHtml}</div>
+                    <small>${poll.totalVotes} votes • Created by Admin</small>
+                `;
+                
+                container.appendChild(pollDiv);
+            });
+        }
+
+        // Utility functions
+        function showMessage(message, type) {
+            const existingMsg = document.querySelector('.success-message, .error-message');
+            if (existingMsg) {
+                existingMsg.remove();
+            }
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = type === 'success' ? 'success-message' : 'error-message';
+            msgDiv.textContent = message;
+            
+            const content = document.querySelector('.content');
+            content.insertBefore(msgDiv, content.firstChild);
+
+            setTimeout(() => {
+                msgDiv.remove();
+            }, 5000);
+        }
+
+        function updateStats() {
+            const totalAlumni = users.filter(u => u.role === 'user').length;
+            document.getElementById('totalAlumni').textContent = totalAlumni;
+            document.getElementById('activeUsers').textContent = Math.floor(totalAlumni * 0.7);
+            document.getElementById('totalPosts').textContent = posts.length;
+        }
+
+        function updateRecentPosts() {
+            const container = document.getElementById('recentPosts');
+            container.innerHTML = '';
+
+            posts.slice(0, 3).forEach(post => {
+                const postDiv = document.createElement('div');
+                postDiv.style.cssText = 'margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;';
+                
+                const timeAgo = getTimeAgo(post.date);
+                postDiv.innerHTML = `
+                    <strong>${post.author}:</strong> ${post.content}
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">${timeAgo}</div>
+                `;
+                container.appendChild(postDiv);
+            });
+        }
+
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (days === 0) return 'Today';
+            if (days === 1) return '1 day ago';
+            return `${days} days ago`;
+        }
+
+        // Initialize application when page loads
+        window.onload = function() {
+            init();
+            updateRecentPosts();
+            loadPolls();
+        };
+    </script>
+</body>
+</html>
